@@ -1,27 +1,26 @@
+"use client";
+
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CalculationTab from "./CalculationTab";
+import FullFledgedCalculatorTab from "./FullFledgedCalculatorTab";
+import VisualAcuityTab from "./VisualAcuityTab"; // Import the new VisualAcuityTab component
 
 const VisionScienceTabs: React.FC = () => {
   // Example formulas - you can customize these
-  const formula1 = (values: number[]) => values[0] + values[1]; // Simple addition
   const formula2 = (values: number[]) => values[0] * values[1] / (values[0] + values[1]); // Example: Lens power calculation
   const formula3 = (values: number[]) => (values[0] - values[1]) / values[2]; // Example: Percentage difference
 
   return (
     <Tabs defaultValue="tab1" className="w-full max-w-4xl mx-auto">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="tab1">Acuidade Visual</TabsTrigger>
         <TabsTrigger value="tab2">Refração</TabsTrigger>
         <TabsTrigger value="tab3">Lentes de Contato</TabsTrigger>
+        <TabsTrigger value="tab4">Calculadora</TabsTrigger>
       </TabsList>
       <TabsContent value="tab1">
-        <CalculationTab
-          title="Cálculo de Acuidade Visual"
-          inputLabels={["Distância (metros)", "Tamanho da Letra (mm)"]}
-          formula={formula1}
-          resultLabel="Acuidade Visual (Snellen)"
-        />
+        <VisualAcuityTab /> {/* Using the new dedicated component */}
       </TabsContent>
       <TabsContent value="tab2">
         <CalculationTab
@@ -38,6 +37,9 @@ const VisionScienceTabs: React.FC = () => {
           formula={formula3}
           resultLabel="Ajuste da Lente"
         />
+      </TabsContent>
+      <TabsContent value="tab4">
+        <FullFledgedCalculatorTab />
       </TabsContent>
     </Tabs>
   );
