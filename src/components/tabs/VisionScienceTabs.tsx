@@ -1,44 +1,62 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CalculationTab from "./CalculationTab";
+import MainInputTab from "./MainInputTab";
 import FullFledgedCalculatorTab from "./FullFledgedCalculatorTab";
-import VisualAcuityTab from "./VisualAcuityTab"; // Import the new VisualAcuityTab component
+import LensmakerFormulaTab from "./LensmakerFormulaTab";
 
 const VisionScienceTabs: React.FC = () => {
-  // Example formulas - you can customize these
-  const formula2 = (values: number[]) => values[0] * values[1] / (values[0] + values[1]); // Example: Lens power calculation
-  const formula3 = (values: number[]) => (values[0] - values[1]) / values[2]; // Example: Percentage difference
+  // State for MainInputTab
+  const [objectSizeMm, setObjectSizeMm] = useState<string>("");
+  const [observationDistanceCm, setObservationDistanceCm] = useState<string>("");
+  const [subtendedAngle, setSubtendedAngle] = useState<number | null>(null);
+  const [avDecimal, setAvDecimal] = useState<number | null>(null);
+  const [snellenEquivalent, setSnellenEquivalent] = useState<string | null>(null);
+  const [logMAR, setLogMAR] = useState<number | null>(null);
+  const [demandingAvDecimal, setDemandingAvDecimal] = useState<number | null>(null);
+
+  // State for LensmakerFormulaTab
+  const [lensPower, setLensPower] = useState<string>("");
+  const [vertexDistance, setVertexDistance] = useState<string>("");
+  const [effectivePower, setEffectivePower] = useState<number | null>(null);
 
   return (
-    <Tabs defaultValue="tab1" className="w-full max-w-4xl mx-auto">
-      <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="tab1">Acuidade Visual</TabsTrigger>
-        <TabsTrigger value="tab2">Refração</TabsTrigger>
-        <TabsTrigger value="tab3">Lentes de Contato</TabsTrigger>
-        <TabsTrigger value="tab4">Calculadora</TabsTrigger>
+    <Tabs defaultValue="mainTab" className="w-full max-w-4xl mx-auto">
+      <TabsList className="grid w-full grid-cols-2"> {/* Alterado para 2 colunas */}
+        <TabsTrigger value="mainTab">Acuidade Visual</TabsTrigger>
+        {/* <TabsTrigger value="lensmakerTab">Lensmaker</TabsTrigger> */} {/* Aba Lensmaker comentada */}
+        <TabsTrigger value="calculatorTab">Calculadora</TabsTrigger>
       </TabsList>
-      <TabsContent value="tab1">
-        <VisualAcuityTab /> {/* Using the new dedicated component */}
-      </TabsContent>
-      <TabsContent value="tab2">
-        <CalculationTab
-          title="Cálculo de Refração"
-          inputLabels={["Poder Esférico (D)", "Poder Cilíndrico (D)"]}
-          formula={formula2}
-          resultLabel="Equivalente Esférico (D)"
+      <TabsContent value="mainTab">
+        <MainInputTab
+          objectSizeMm={objectSizeMm}
+          setObjectSizeMm={setObjectSizeMm}
+          observationDistanceCm={observationDistanceCm}
+          setObservationDistanceCm={setObservationDistanceCm}
+          subtendedAngle={subtendedAngle}
+          setSubtendedAngle={setSubtendedAngle}
+          avDecimal={avDecimal}
+          setAvDecimal={setAvDecimal}
+          snellenEquivalent={snellenEquivalent}
+          setSnellenEquivalent={setSnellenEquivalent}
+          logMAR={logMAR}
+          setLogMAR={setLogMAR}
+          demandingAvDecimal={demandingAvDecimal}
+          setDemandingAvDecimal={setDemandingAvDecimal}
         />
       </TabsContent>
-      <TabsContent value="tab3">
-        <CalculationTab
-          title="Cálculo de Lentes de Contato"
-          inputLabels={["Curva Base (mm)", "Diâmetro (mm)", "Poder (D)"]}
-          formula={formula3}
-          resultLabel="Ajuste da Lente"
-        />
-      </TabsContent>
-      <TabsContent value="tab4">
+      {/* <TabsContent value="lensmakerTab"> */} {/* Conteúdo da aba Lensmaker comentado */}
+        {/* <LensmakerFormulaTab
+          lensPower={lensPower}
+          setLensPower={setLensPower}
+          vertexDistance={vertexDistance}
+          setVertexDistance={setVertexDistance}
+          effectivePower={effectivePower}
+          setEffectivePower={setEffectivePower}
+        /> */}
+      {/* </TabsContent> */}
+      <TabsContent value="calculatorTab">
         <FullFledgedCalculatorTab />
       </TabsContent>
     </Tabs>
