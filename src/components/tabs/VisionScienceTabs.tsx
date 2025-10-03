@@ -11,6 +11,7 @@ const VisionScienceTabs: React.FC = () => {
   const [objectSizeMm, setObjectSizeMm] = useState<string>("");
   const [observationDistanceCm, setObservationDistanceCm] = useState<string>("");
   const [subtendedAngle, setSubtendedAngle] = useState<number | null>(null);
+  const [subtendedAngleDetail, setSubtendedAngleDetail] = useState<number | null>(null); // Novo estado
   const [avDecimal, setAvDecimal] = useState<number | null>(null);
   const [snellenEquivalent, setSnellenEquivalent] = useState<string | null>(null);
   const [logMAR, setLogMAR] = useState<number | null>(null);
@@ -23,10 +24,10 @@ const VisionScienceTabs: React.FC = () => {
 
   return (
     <Tabs defaultValue="mainTab" className="w-full max-w-4xl mx-auto">
-      <TabsList className="grid w-full grid-cols-1"> {/* Alterado para 1 coluna */}
+      <TabsList className="grid w-full grid-cols-1">
         <TabsTrigger value="mainTab">Acuidade Visual</TabsTrigger>
-        {/* <TabsTrigger value="lensmakerTab">Lensmaker</TabsTrigger> */} {/* Aba Lensmaker comentada */}
-        {/* <TabsTrigger value="calculatorTab">Calculadora</TabsTrigger> */} {/* Aba Calculadora comentada */}
+        {/* <TabsTrigger value="lensmakerTab">Lensmaker</TabsTrigger> */}
+        {/* <TabsTrigger value="calculatorTab">Calculadora</TabsTrigger> */}
       </TabsList>
       <TabsContent value="mainTab">
         <MainInputTab
@@ -36,6 +37,8 @@ const VisionScienceTabs: React.FC = () => {
           setObservationDistanceCm={setObservationDistanceCm}
           subtendedAngle={subtendedAngle}
           setSubtendedAngle={setSubtendedAngle}
+          subtendedAngleDetail={subtendedAngleDetail} // Passando o novo estado
+          setSubtendedAngleDetail={setSubtendedAngleDetail} // Passando o novo setter
           avDecimal={avDecimal}
           setAvDecimal={setAvDecimal}
           snellenEquivalent={snellenEquivalent}
@@ -46,7 +49,7 @@ const VisionScienceTabs: React.FC = () => {
           setDemandingAvDecimal={setDemandingAvDecimal}
         />
       </TabsContent>
-      {/* <TabsContent value="lensmakerTab"> */} {/* Conteúdo da aba Lensmaker comentado */}
+      {/* <TabsContent value="lensmakerTab"> */}
         {/* <LensmakerFormulaTab
           lensPower={lensPower}
           setLensPower={setLensPower}
@@ -56,7 +59,7 @@ const VisionScienceTabs: React.FC = () => {
           setEffectivePower={setEffectivePower}
         /> */}
       {/* </TabsContent> */}
-      {/* <TabsContent value="calculatorTab"> */} {/* Conteúdo da aba Calculadora comentado */}
+      {/* <TabsContent value="calculatorTab"> */}
         {/* <FullFledgedCalculatorTab /> */}
       {/* </TabsContent> */}
     </Tabs>

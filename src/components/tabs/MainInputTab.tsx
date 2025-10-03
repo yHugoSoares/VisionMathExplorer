@@ -14,6 +14,9 @@ interface MainInputTabProps {
   setObservationDistanceCm: (value: string) => void;
   subtendedAngle: number | null;
   setSubtendedAngle: (value: number | null) => void;
+  // Novo estado para o ângulo subtendido do detalhe
+  subtendedAngleDetail: number | null;
+  setSubtendedAngleDetail: (value: number | null) => void;
   avDecimal: number | null;
   setAvDecimal: (value: number | null) => void;
   snellenEquivalent: string | null;
@@ -31,6 +34,8 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
   setObservationDistanceCm,
   subtendedAngle,
   setSubtendedAngle,
+  subtendedAngleDetail, // Novo prop
+  setSubtendedAngleDetail, // Novo prop
   avDecimal,
   setAvDecimal,
   snellenEquivalent,
@@ -58,38 +63,39 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
     const calculatedSubtendedAngle = (size / observationDistanceMm) * 3438;
     setSubtendedAngle(calculatedSubtendedAngle);
 
-    // 2. Conversão para Acuidade Visual Decimal (AV Decimal)
-    // Assumindo que o ângulo subtendido é o Ângulo Mínimo de Resolução (MAR)
-    const calculatedAvDecimal = 1 / calculatedSubtendedAngle;
+    // 2. Ângulo Subtendido do Detalhe (MAR / 5)
+    const calculatedSubtendedAngleDetail = calculatedSubtendedAngle / 5;
+    setSubtendedAngleDetail(calculatedSubtendedAngleDetail);
+
+    // 3. Conversão para Acuidade Visual Decimal (AV Decimal)
+    // Agora usando o Ângulo Subtendido do Detalhe
+    const calculatedAvDecimal = 1 / calculatedSubtendedAngleDetail;
     setAvDecimal(calculatedAvDecimal);
 
-    // 3. Equivalente em escala de Snellen (6/X)
-    // O denominador Snellen (X) é 6 vezes o Ângulo Mínimo de Resolução (MAR) em minutos de arco.
-    let snellenXCalculated: number;
-    if (calculatedSubtendedAngle === 0) {
-      snellenXCalculated = Infinity; // Evitar divisão por zero se o ângulo for 0
+    // 4. Equivalente em escala de Snellen (6/X)
+    // Nova fórmula: X = 6 / AV decimal
+    let snellenDenominatorX: number;
+    if (calculatedAvDecimal === 0 || calculatedAvDecimal === Infinity) {
+      snellenDenominatorX = 0; // Representa visão perfeita (6/0)
     } else {
-      snellenXCalculated = 6 * calculatedSubtendedAngle;
+      snellenDenominatorX = 6 / calculatedAvDecimal;
     }
     
     // Formatar o resultado:
-    if (snellenXCalculated === Infinity) {
+    if (snellenDenominatorX <= 0) {
       setSnellenEquivalent("6/0 (Visão Perfeita)");
-    } else if (snellenXCalculated < 0.01) { // Para denominadores muito pequenos, usar notação exponencial
-      setSnellenEquivalent(`6/${snellenXCalculated.toExponential(0)}`);
-    } else if (snellenXCalculated < 1) { // Se X for menor que 1, mostrar mais casas decimais
-      setSnellenEquivalent(`6/${snellenXCalculated.toFixed(2)}`);
+    } else if (snellenDenominatorX < 1) { // Se X for menor que 1, mostrar mais casas decimais
+      setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(2)}`);
     } else {
-      setSnellenEquivalent(`6/${snellenXCalculated.toFixed(0)}`); // Arredondar para o número inteiro mais próximo
+      setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(0)}`); // Arredondar para o número inteiro mais próximo
     }
 
-    // 4. Equivalente em escala LogMAR
-    // LogMAR = log10(MAR_arcmin)
-    const calculatedLogMAR = Math.log10(calculatedSubtendedAngle);
+    // 5. Equivalente em escala LogMAR
+    // LogMAR = log10(Ângulo Subtendido do Detalhe)
+    const calculatedLogMAR = Math.log10(calculatedSubtendedAngleDetail);
     setLogMAR(calculatedLogMAR);
 
-    // 5. Estimativa da Acuidade Visual necessária para tarefas exigentes (o dobro da acuidade decimal)
-    // "O dobro da acuidade decimal" implica uma visão melhor, então multiplicamos o valor decimal.
+    // 6. Estimativa da Acuidade Visual necessária para tarefas exigentes (o dobro da acuidade decimal)
     const calculatedDemandingAvDecimal = calculatedAvDecimal * 2;
     setDemandingAvDecimal(calculatedDemandingAvDecimal);
   };
@@ -98,6 +104,7 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
     setObjectSizeMm("");
     setObservationDistanceCm("");
     setSubtendedAngle(null);
+    setSubtendedAngleDetail(null); // Limpar o novo estado
     setAvDecimal(null);
     setSnellenEquivalent(null);
     setLogMAR(null);
@@ -152,7 +159,7 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
         </Button>
       </div>
 
-      {(subtendedAngle !== null || avDecimal !== null || snellenEquivalent !== null || logMAR !== null || demandingAvDecimal !== null) && (
+      {(subtendedAngle !== null || subtendedAngleDetail !== null || avDecimal !== null || snellenEquivalent !== null || logMAR !== null || demandingAvDecimal !== null) && (
         <Card className="mt-6 max-w-md mx-auto text-center">
           <CardHeader>
             <CardTitle>Resultados</CardTitle>
@@ -162,6 +169,12 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
               <p className="text-lg">
                 <strong>Ângulo Subtendido (minutos de arco):</strong>{" "}
                 <span className="font-bold">{subtendedAngle.toFixed(2)}'</span>
+              </p>
+            )}
+            {subtendedAngleDetail !== null && (
+              <p className="text-lg">
+                <strong>Ângulo Subtendido do Detalhe (minutos de arco):</strong>{" "}
+                <span className="font-bold">{subtendedAngleDetail.toFixed(2)}'</span>
               </p>
             )}
             {avDecimal !== null && (

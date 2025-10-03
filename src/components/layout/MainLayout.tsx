@@ -17,9 +17,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <main className="flex-grow container mx-auto p-4">
         {children}
       </main>
-      {/* <footer className="p-4 text-right text-sm text-muted-foreground">
+      { <footer className="p-4 text-right text-sm text-muted-foreground">
         Made by: Hugo Soares
-      </footer> */}
+      </footer> }
     </div>
   );
 };
