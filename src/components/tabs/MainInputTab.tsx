@@ -81,13 +81,15 @@ const MainInputTab: React.FC<MainInputTabProps> = ({
       snellenDenominatorX = 6 / calculatedAvDecimal;
     }
     
-    // Formatar o resultado:
+    // Formatar o resultado: não mostrar decimais se for um número inteiro
     if (snellenDenominatorX <= 0) {
       setSnellenEquivalent("6/0 (Visão Perfeita)");
-    } else if (snellenDenominatorX < 1) { // Se X for menor que 1, mostrar mais casas decimais
-      setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(2)}`);
     } else {
-      setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(0)}`); // Arredondar para o número inteiro mais próximo
+      if (snellenDenominatorX % 1 === 0) { // Se for um número inteiro
+        setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(0)}`);
+      } else { // Caso contrário, mostrar duas casas decimais
+        setSnellenEquivalent(`6/${snellenDenominatorX.toFixed(2)}`);
+      }
     }
 
     // 5. Equivalente em escala LogMAR
