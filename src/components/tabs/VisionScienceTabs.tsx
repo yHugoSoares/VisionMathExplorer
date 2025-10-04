@@ -24,10 +24,10 @@ const VisionScienceTabs: React.FC = () => {
 
   return (
     <Tabs defaultValue="mainTab" className="w-full max-w-4xl mx-auto">
-      <TabsList className="grid w-full grid-cols-1">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="mainTab">Acuidade Visual</TabsTrigger>
-        {/* <TabsTrigger value="lensmakerTab">Lensmaker</TabsTrigger> */}
-        {/* <TabsTrigger value="calculatorTab">Calculadora</TabsTrigger> */}
+        <TabsTrigger value="lensmakerTab">Compensação do Vértice</TabsTrigger>
+        <TabsTrigger value="calculatorTab">Calculadora</TabsTrigger>
       </TabsList>
       <TabsContent value="mainTab">
         <MainInputTab
@@ -49,19 +49,19 @@ const VisionScienceTabs: React.FC = () => {
           setDemandingAvDecimal={setDemandingAvDecimal}
         />
       </TabsContent>
-      {/* <TabsContent value="lensmakerTab"> */}
-        {/* <LensmakerFormulaTab
+      <TabsContent value="lensmakerTab">
+        <LensmakerFormulaTab
           lensPower={lensPower}
           setLensPower={setLensPower}
           vertexDistance={vertexDistance}
           setVertexDistance={setVertexDistance}
           effectivePower={effectivePower}
           setEffectivePower={setEffectivePower}
-        /> */}
-      {/* </TabsContent> */}
-      {/* <TabsContent value="calculatorTab"> */}
-        {/* <FullFledgedCalculatorTab /> */}
-      {/* </TabsContent> */}
+        />
+      </TabsContent>
+      <TabsContent value="calculatorTab">
+        <FullFledgedCalculatorTab />
+      </TabsContent>
     </Tabs>
   );
 };
